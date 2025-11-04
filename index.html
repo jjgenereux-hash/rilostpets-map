@@ -9,16 +9,16 @@
     html, body {
       margin: 0;
       padding: 0;
-      width: 100%;
-      height: 100%;
+      width: 100vw;
+      height: 100vh;
       overflow: hidden;
     }
     #map {
       position: absolute;
       top: 0;
       bottom: 0;
-      width: 100%;
-      height: 100%;
+      width: 100vw;
+      height: 100vh;
     }
     .popup-img {
       width: 100px;
@@ -61,17 +61,11 @@
     data.forEach(sighting => {
       if (sighting.location_lat && sighting.location_lng) {
         // Prepare popup HTML
-        let popupHtml = `<strong>${sighting.pet_name || 'Unknown'}</strong><br>
-          <em>Type: ${sighting.sightings_type}</em><br>
-          ${sighting.description || ''}<br>
-          <strong>Reported:</strong> ${new Date(sighting.timestamp).toLocaleString()}<br>
-          <strong>Contact:</strong> ${sighting.contact_info || ''}`;
+        let popupHtml = `<strong>${sighting.pet_name || 'Unknown'}</strong><br>`;
+        if (sighting.pet_description) popupHtml += `${sighting.pet_description}<br>`;
+        if (sighting.photo_url) popupHtml += `<img src="${sighting.photo_url}" class="popup-img" />`;
 
-        if (sighting.photo_url) {
-          popupHtml += `<br><img src="${sighting.photo_url}" class="popup-img" alt="Pet photo">`;
-        }
-
-        // Add marker to map
+        // Add marker
         new mapboxgl.Marker()
           .setLngLat([sighting.location_lng, sighting.location_lat])
           .setPopup(new mapboxgl.Popup().setHTML(popupHtml))
